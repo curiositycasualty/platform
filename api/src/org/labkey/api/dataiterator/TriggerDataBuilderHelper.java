@@ -74,7 +74,7 @@ public class TriggerDataBuilderHelper
             if (!_target.hasTriggers(_c))
                 return pre;
             pre = LoggingDataIterator.wrap(pre);
-            DataIterator coerce = new CoerceDataIterator(pre, context, _target);
+            DataIterator coerce = new CoerceDataIterator(pre, context, _target, false);
             coerce = LoggingDataIterator.wrap(coerce);
             return LoggingDataIterator.wrap(new BeforeIterator(coerce, context));
         }
