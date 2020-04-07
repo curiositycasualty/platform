@@ -77,7 +77,8 @@
     }
   },
   "dependencies": {
-    "@labkey/components": "0.41.0",
+    "@labkey/api": "0.0.45",
+    "@labkey/components": "0.44.0",
     "@labkey/eslint-config-react": "0.0.5",
     "react-toggle-button": "2.2.0"
   },
@@ -115,6 +116,5 @@
     "webpack": "4.42.0",
     "webpack-cli": "3.3.11",
     "webpack-dev-server": "3.10.3"
-  },
-  "typings": "./src/client/typings/main.d.ts"
+  }
 }
