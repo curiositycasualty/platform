@@ -136,7 +136,7 @@ public class DatasetQueryView extends StudyQueryView
         }
 
         if (settings.isUseQCSet() && QCStateManager.getInstance().showQCStates(getContainer()))
-            _qcStateSet = QCStateSet.getSelectedStates(getContainer(), form.getQCState());
+            _qcStateSet = QCStateSet.getSelectedStates(getViewContext());
 
         _showSourceLinks = settings.isShowSourceLinks();
 
@@ -228,6 +228,7 @@ public class DatasetQueryView extends StudyQueryView
             _cohortFilter.addFilterCondition(table, getContainer(), filter);
         }
 
+/*
         if (null != _qcStateSet)
         {
             SimpleFilter filter = (SimpleFilter) view.getRenderContext().getBaseFilter();
@@ -244,6 +245,7 @@ public class DatasetQueryView extends StudyQueryView
                 filter.addClause(new SimpleFilter.SQLClause(_qcStateSet.getStateInClause(qcStateColumn.getAlias()), null, qcStateColumn.getFieldKey()));
             }
         }
+*/
 
         ColumnInfo sourceLsidCol = table.getColumn("SourceLsid");
         DisplayColumn sourceLsidDisplayCol = view.getDataRegion().getDisplayColumn("SourceLsid");
@@ -509,7 +511,11 @@ public class DatasetQueryView extends StudyQueryView
 
         for (QCStateSet set : stateSets)
         {
-            NavTree setItem = new NavTree(set.getLabel(), getViewContext().cloneActionURL().replaceParameter(BaseStudyController.SharedFormParameters.QCState, set.getFormValue()).toString());
+/*
+            NavTree setItem = new NavTree(set.getLabel(), getViewContext().cloneActionURL().replaceParameter(BaseStudyController.SharedFormParameters.QCState,
+                    set.getFormValue()).toString());
+*/
+            NavTree setItem = new NavTree(set.getLabel(), set.getURL(getViewContext().cloneActionURL(), getDataRegionName()));
             setItem.setId("QCState:" + set.getLabel());
             if (set.equals(currentSet))
                 setItem.setSelected(true);

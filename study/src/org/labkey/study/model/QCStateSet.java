@@ -15,15 +15,26 @@
  */
 package org.labkey.study.model;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.labkey.api.data.Container;
+import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.qc.QCState;
 import org.labkey.api.qc.QCStateManager;
+import org.labkey.api.query.FieldKey;
+import org.labkey.api.util.Pair;
+import org.labkey.api.view.ActionURL;
+import org.labkey.api.view.ViewContext;
+import org.labkey.study.pipeline.AbstractDatasetImportTask;
+import org.labkey.study.xml.qcStates.StudyqcDocument;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 /*
  * User: brittp
  * Date: Jul 16, 2008
@@ -194,6 +205,43 @@ public class QCStateSet
         return formValue.toString();
     }
 
+    public ActionURL getURL(ActionURL baseURL, String dataRegionName)
+    {
+        // strip off the QCState parameters
+        baseURL.deleteParameter("QCState");
+        for (Pair<String, String> param : baseURL.getParameters())
+        {
+            if (param.getKey().contains(FieldKey.fromParts("QCState", "Label").toString()))
+            {
+                baseURL.deleteParameter(param.getKey());
+            }
+        }
+
+        if (!_states.isEmpty())
+        {
+            SimpleFilter filter = new SimpleFilter();
+            List<String> params = _states.stream()
+                    .map(s -> s.getLabel())
+                    .collect(Collectors.toList());
+
+            if (params.size() == 1)
+                filter.addCondition(FieldKey.fromParts("QCState", "Label"), params.get(0));
+            else
+                filter.addClause(new SimpleFilter.InClause(FieldKey.fromParts("QCState", "Label"), params));
+
+            String prefix = dataRegionName == null ? "" : dataRegionName + ".";
+            for (SimpleFilter.FilterClause fc : filter.getClauses())
+            {
+                Map.Entry<String, String> entry = fc.toURLParam(prefix);
+                if (entry != null)
+                {
+                    baseURL.replaceParameter(entry.getKey(), entry.getValue());
+                }
+            }
+        }
+        return baseURL;
+    }
+
     public static QCStateSet getAllStates(Container container)
     {
         List<QCState> states = QCStateManager.getInstance().getQCStates(container);
@@ -241,11 +289,24 @@ public class QCStateSet
         return new QCStateSet(container, stateRowIds, includeUnmarked);
     }
 
+    public static QCStateSet getSelectedStates(Container container, Set<String> qcStateLabels, boolean includeUnmarked)
+    {
+        if (qcStateLabels.isEmpty())
+            return getDefaultStates(container);
+
+        List<QCState> states = QCStateManager.getInstance().getQCStates(container).stream()
+                .filter(q -> qcStateLabels.contains(q.getLabel()))
+                .collect(Collectors.toList());
+
+        return new QCStateSet(container, states, includeUnmarked);
+    }
+
     private static QCStateSet getSingletonSet(Container container, QCState state)
     {
         return new QCStateSet(container, Collections.singletonList(state), false, state.getLabel());
     }
 
+    @Deprecated
     public static QCStateSet getSelectedStates(Container container, String formValue)
     {
         if (formValue == null || formValue.length() == 0)
@@ -275,6 +336,70 @@ public class QCStateSet
         for (int i = 0; i < rowIds.size(); i++)
             rowIdArray[i] = rowIds.get(i).intValue();
         return QCStateSet.getSelectedStates(container, rowIdArray, includeUnmarked);
+    }
+
+    public static QCStateSet getSelectedStates(ViewContext context)
+    {
+        Set<SimpleFilter> filters = new HashSet<>();
+        Set<String> qcStateLabels = new HashSet<>();
+        for (Pair<String, String> param : context.getActionURL().getParameters())
+        {
+            if (param.getKey().contains(FieldKey.fromParts("QCState", "Label").toString()))
+            {
+                SimpleFilter filter = SimpleFilter.createFilterFromParameter(param.getKey() + "=" + param.getValue());
+                filters.add(filter);
+            }
+            else if (param.getKey().equals("QCState"))
+            {
+                // legacy qc state param
+                if (NumberUtils.isDigits(param.getValue()))
+                {
+                    QCState state = QCStateManager.getInstance().getQCStateForRowId(context.getContainer(), NumberUtils.toInt(param.getValue()));
+                    if (state != null)
+                        qcStateLabels.add(state.getLabel());
+                }
+            }
+        }
+
+        if (filters.isEmpty() && qcStateLabels.isEmpty())
+            return getDefaultStates(context.getContainer());
+
+        // get the qc state labels from the filter params
+        for (SimpleFilter filter : filters)
+        {
+            filter.getClauses()
+                    .forEach(fc -> {
+                        for (Object param : fc.getParamVals())
+                            qcStateLabels.add(String.valueOf(param));
+                    });
+        }
+/*
+        String[] rowIdStrings = formValue.split(",");
+        List<Integer> rowIds = new ArrayList<>();
+        boolean includeUnmarked = false;
+        try
+        {
+            for (String rowIdString : rowIdStrings)
+            {
+                int rowId = Integer.parseInt(rowIdString);
+                if (rowId == -1)
+                    includeUnmarked = true;
+                else
+                    rowIds.add(rowId);
+            }
+        }
+        catch (NumberFormatException e)
+        {
+            // invalid form value, assume public data only:
+            return getDefaultStates(container);
+        }
+
+        int[] rowIdArray = new int[rowIds.size()];
+        for (int i = 0; i < rowIds.size(); i++)
+            rowIdArray[i] = rowIds.get(i).intValue();
+        return QCStateSet.getSelectedStates(container, rowIdArray, includeUnmarked);
+*/
+        return QCStateSet.getSelectedStates(context.getContainer(), qcStateLabels, false);
     }
 
     public static List<QCStateSet> getSelectableSets(Container container)

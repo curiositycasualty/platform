@@ -205,6 +205,7 @@ import org.labkey.study.pipeline.StudyPipeline;
 import org.labkey.study.qc.StudyQCStateHandler;
 import org.labkey.study.query.DatasetQuerySettings;
 import org.labkey.study.query.DatasetQueryView;
+import org.labkey.study.query.DatasetTableImpl;
 import org.labkey.study.query.LocationTable;
 import org.labkey.study.query.PublishedRecordQueryView;
 import org.labkey.study.query.StudyPropertiesQueryView;
@@ -851,10 +852,19 @@ public class StudyController extends BaseStudyController
             Study study = getStudyRedirectIfNull();
             _encodedQcState = form.getQCState();
             QCStateSet qcStateSet = null;
-            if (QCStateManager.getInstance().showQCStates(getContainer()))
-                qcStateSet = QCStateSet.getSelectedStates(getContainer(), form.getQCState());
             ViewContext context = getViewContext();
+            if (QCStateManager.getInstance().showQCStates(getContainer()))
+                //qcStateSet = QCStateSet.getSelectedStates(getContainer(), form.getQCState());
+                qcStateSet = QCStateSet.getSelectedStates(context);
 
+            if (form.getQCState() == null)
+            {
+/*
+                ActionURL newUrl = getViewContext().cloneActionURL();
+                newUrl.addParameter("QCState", 15);
+                throw new RedirectException(newUrl);
+*/
+            }
             String export = StringUtils.trimToNull(context.getActionURL().getParameter("export"));
 
             String viewName = (String)context.get(DATASET_VIEW_NAME_PARAMETER_NAME);
