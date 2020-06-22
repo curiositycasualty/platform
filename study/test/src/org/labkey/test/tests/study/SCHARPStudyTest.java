@@ -22,6 +22,7 @@ import org.labkey.test.Locator;
 import org.labkey.test.TestFileUtils;
 import org.labkey.test.categories.DailyA;
 import org.labkey.test.util.PostgresOnlyTest;
+import org.labkey.test.util.StudyHelper;
 
 import java.io.File;
 import java.util.Arrays;
@@ -36,9 +37,7 @@ public class SCHARPStudyTest extends BaseWebDriverTest implements PostgresOnlyTe
 {
     public static final String PROJECT_NAME="SCHARP Study Test";
 
-    private String _labkeyRoot = TestFileUtils.getLabKeyRoot();
-    private String _pipelinePathMain = new File(_labkeyRoot, "/sampledata/study").getPath();
-    private File _studyZipFile = TestFileUtils.getSampleData("studies/studyshell.zip");
+    private final File _studyZipFile = TestFileUtils.getSampleData("studies/studyshell.zip");
 
     protected static class StatusChecker implements Supplier<Boolean>
     {
@@ -78,8 +77,8 @@ public class SCHARPStudyTest extends BaseWebDriverTest implements PostgresOnlyTe
 
     protected void setupPipeline()
     {
-        log("Setting pipeline root to " + _pipelinePathMain + "...");
-        setPipelineRoot(_pipelinePathMain);
+        log("Upload sample study");
+        StudyHelper.uploadSampleStudy(PROJECT_NAME);
         assertTextPresent("The pipeline root was set");
         clickProject(PROJECT_NAME);
     }

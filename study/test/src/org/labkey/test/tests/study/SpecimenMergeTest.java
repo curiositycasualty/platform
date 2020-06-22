@@ -46,7 +46,7 @@ public class SpecimenMergeTest extends BaseWebDriverTest
     protected static final File SPECIMEN_TEMP_DIR = StudyHelper.getStudyTempDir();
     protected int pipelineJobCount = 3;
 
-    protected String _studyDataRoot = null;
+    protected File _studyDataRoot = null;
 
     @Override
     public List<String> getAssociatedModules()
@@ -69,14 +69,6 @@ public class SpecimenMergeTest extends BaseWebDriverTest
     @Override
     protected void doCleanup(boolean afterTest) throws TestTimeoutException
     {
-        _studyDataRoot = TestFileUtils.getLabKeyRoot() + "/sampledata/study";
-        File tempDir = SPECIMEN_TEMP_DIR;
-        if (tempDir.exists())
-        {
-            for (File file : tempDir.listFiles())
-                file.delete();
-            tempDir.delete();
-        }
         _containerHelper.deleteProject(getProjectName(), afterTest);
     }
 
@@ -95,7 +87,7 @@ public class SpecimenMergeTest extends BaseWebDriverTest
                 LAB20_SPECIMENS,
                 LAB21_SPECIMENS
         };
-        SpecimenImporter importer = new SpecimenImporter(new File(_studyDataRoot), archives, SPECIMEN_TEMP_DIR, FOLDER_NAME, pipelineJobCount);
+        SpecimenImporter importer = new SpecimenImporter(_studyDataRoot, archives, SPECIMEN_TEMP_DIR, FOLDER_NAME, pipelineJobCount);
         importer.setExpectError(true);
         importer.importAndWaitForComplete();
 
@@ -107,7 +99,7 @@ public class SpecimenMergeTest extends BaseWebDriverTest
 
     protected void setUpSteps()
     {
-        _studyDataRoot = TestFileUtils.getLabKeyRoot() + "/sampledata/study";
+        _studyDataRoot = TestFileUtils.getDefaultFileRoot(PROJECT_NAME + "/" + FOLDER_NAME);
 
         _containerHelper.createProject(PROJECT_NAME, null);
 
@@ -116,7 +108,7 @@ public class SpecimenMergeTest extends BaseWebDriverTest
         click(Locator.radioButtonByNameAndValue("simpleRepository", "true"));
         clickButton("Create Study");
 
-        setPipelineRoot(_studyDataRoot);
+        StudyHelper.uploadSampleStudy(PROJECT_NAME + "/" + FOLDER_NAME);
         clickFolder("My Study");
         clickAndWait(Locator.linkWithText("Manage Files"));
     }

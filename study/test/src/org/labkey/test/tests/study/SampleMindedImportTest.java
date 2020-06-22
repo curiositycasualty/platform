@@ -24,6 +24,7 @@ import org.labkey.test.TestTimeoutException;
 import org.labkey.test.categories.DailyB;
 import org.labkey.test.categories.Specimen;
 import org.labkey.test.util.DataRegionTable;
+import org.labkey.test.util.StudyHelper;
 
 import java.io.File;
 import java.util.Arrays;
@@ -90,10 +91,7 @@ public class SampleMindedImportTest extends BaseWebDriverTest
         selectOptionByValue(Locator.name("sequenceNumHandling"), "logUniqueByDate");
         clickAndWait(Locator.lkButton("Save"));
 
-        // "overview" is a dumb place for this link
-        clickAndWait(Locator.linkWithText("Overview"));
-        clickAndWait(Locator.linkWithText("manage files"));
-        setPipelineRoot(TestFileUtils.getLabKeyRoot() + "/sampledata/study");
+        StudyHelper.uploadSampleStudy(PROJECT_NAME);
         clickProject(PROJECT_NAME);
         clickTab("Overview");
         clickAndWait(Locator.linkWithText("Manage Files"));
