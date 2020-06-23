@@ -21,8 +21,8 @@ import org.labkey.test.BaseWebDriverTest;
 import org.labkey.test.Locator;
 import org.labkey.test.TestFileUtils;
 import org.labkey.test.categories.DailyA;
+import org.labkey.test.util.LogMethod;
 import org.labkey.test.util.PostgresOnlyTest;
-import org.labkey.test.util.StudyHelper;
 
 import java.io.File;
 import java.util.Arrays;
@@ -68,21 +68,12 @@ public class SCHARPStudyTest extends BaseWebDriverTest implements PostgresOnlyTe
         _containerHelper.createProject(PROJECT_NAME, "Study");
 
         clickProject(PROJECT_NAME);
-        log("importing study...");
-        setupPipeline();
         importStudy();
 
         log("Study imported and queries validated successfully.");
     }
 
-    protected void setupPipeline()
-    {
-        log("Upload sample study");
-        StudyHelper.uploadSampleStudy(PROJECT_NAME);
-        assertTextPresent("The pipeline root was set");
-        clickProject(PROJECT_NAME);
-    }
-
+    @LogMethod
     protected void importStudy()
     {
         log("Importing study from " + _studyZipFile + "...");
