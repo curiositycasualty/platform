@@ -23,6 +23,7 @@ import org.labkey.test.pages.study.DatasetDesignerPage;
 import org.labkey.test.pages.study.ManageVisitPage;
 import org.labkey.test.params.FieldDefinition;
 import org.labkey.test.util.StudyHelper;
+import org.labkey.test.util.core.webdav.WebDavUploadHelper;
 
 import java.io.File;
 
@@ -100,13 +101,10 @@ public abstract class StudyManualTest extends StudyTest
         clickButton("Save");
 
         // upload datasets:
-        setPipelineRoot(StudyHelper.getPipelinePath());
-        clickTab("Overview");
-        clickAndWait(Locator.linkWithText("Manage Files"));
-        clickButton("Process and Import Data");
-        _fileBrowserHelper.selectFileBrowserItem("datasets/Study001.dataset");
-        if (isButtonPresent("Delete log"))
-            clickButton("Delete log");
+        File datasetFile = TestFileUtils.getSampleData("study/datasets/Study001.dataset");
+        new WebDavUploadHelper(getCurrentContainerPath()).uploadFile(datasetFile);
+        goToDataPipeline().clickProcessData();
+        _fileBrowserHelper.selectFileBrowserItem(datasetFile.getName());
         _fileBrowserHelper.selectImportDataAction("Import Datasets");
         clickButton("Start Import");
         waitForPipelineJobsToComplete(1, "study import", false);

@@ -20,24 +20,17 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.labkey.test.Locator;
-import org.labkey.test.TestFileUtils;
 import org.labkey.test.TestTimeoutException;
-import org.labkey.test.WebTestHelper;
 import org.labkey.test.categories.Assays;
 import org.labkey.test.categories.DailyC;
-import org.labkey.test.components.CustomizeView;
 import org.labkey.test.tests.AbstractAssayTest;
 import org.labkey.test.util.DataRegionTable;
 import org.labkey.test.util.LogMethod;
 import org.labkey.test.util.StudyHelper;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -73,10 +66,10 @@ public class CopyAssayToStudyTest extends AbstractAssayTest
     private void doSetup() throws IOException
     {
         setupEnvironment();
-        setupPipeline(getProjectName());
-        SpecimenImporter importer = new SpecimenImporter(TestFileUtils.getTestTempDir(),
+        portalHelper.addWebPart("Data Pipeline"); // May not be necessary
+        SpecimenImporter importer = new SpecimenImporter(
                 StudyHelper.SPECIMEN_ARCHIVE_A,
-                new File(TestFileUtils.getTestTempDir(), "specimensSubDir"), TEST_ASSAY_FLDR_STUDY2, 1);
+                TEST_ASSAY_FLDR_STUDY2, 1);
         importer.importAndWaitForComplete();
         defineAssay();
 

@@ -87,7 +87,7 @@ public class SpecimenMergeTest extends BaseWebDriverTest
                 LAB20_SPECIMENS,
                 LAB21_SPECIMENS
         };
-        SpecimenImporter importer = new SpecimenImporter(_studyDataRoot, archives, SPECIMEN_TEMP_DIR, FOLDER_NAME, pipelineJobCount);
+        SpecimenImporter importer = new SpecimenImporter(archives, FOLDER_NAME, pipelineJobCount);
         importer.setExpectError(true);
         importer.importAndWaitForComplete();
 

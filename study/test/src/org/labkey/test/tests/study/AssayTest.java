@@ -19,7 +19,6 @@ package org.labkey.test.tests.study;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.labkey.test.Locator;
-import org.labkey.test.TestFileUtils;
 import org.labkey.test.TestTimeoutException;
 import org.labkey.test.categories.Assays;
 import org.labkey.test.categories.DailyC;
@@ -37,7 +36,6 @@ import org.labkey.test.util.LogMethod;
 import org.labkey.test.util.SampleSetHelper;
 import org.labkey.test.util.StudyHelper;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
@@ -81,8 +79,8 @@ public class AssayTest extends AbstractAssayTest
     {
         log("Starting Assay security scenario tests");
         setupEnvironment();
-        setupPipeline(getProjectName());
-        SpecimenImporter importer = new SpecimenImporter(TestFileUtils.getTestTempDir(), StudyHelper.SPECIMEN_ARCHIVE_A, new File(TestFileUtils.getTestTempDir(), "specimensSubDir"), TEST_ASSAY_FLDR_STUDY2, 1);
+        portalHelper.addWebPart("Data Pipeline"); // May not be necessary
+        SpecimenImporter importer = new SpecimenImporter(StudyHelper.SPECIMEN_ARCHIVE_A, TEST_ASSAY_FLDR_STUDY2, 1);
         importer.importAndWaitForComplete();
         defineAssay();
         uploadRuns(TEST_ASSAY_FLDR_LAB1, TEST_ASSAY_USR_TECH1);
