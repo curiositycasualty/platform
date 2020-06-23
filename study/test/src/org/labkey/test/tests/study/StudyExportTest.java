@@ -73,7 +73,7 @@ public class StudyExportTest extends StudyManualTest
         createStudyManually();
 
         // import the specimens and wait for both datasets & specimens to load
-        SpecimenImporter specimenImporter = new SpecimenImporter(new File(StudyHelper.getPipelinePath()), StudyHelper.SPECIMEN_ARCHIVE_A, ARCHIVE_TEMP_DIR, getFolderName(), 2);
+        SpecimenImporter specimenImporter = new SpecimenImporter(StudyHelper.SPECIMEN_ARCHIVE_A, getFolderName(), 2);
         specimenImporter.importAndWaitForComplete();
 
         // TODO: Call afterManualCreate()?
@@ -378,7 +378,7 @@ public class StudyExportTest extends StudyManualTest
         BootstrapMenu.find(getDriver(), "Comments and QC").clickSubMenu(true, "Exit Comments and QC mode");
 
         // import second archive, verify that that data is merged:
-        SpecimenImporter importer = new SpecimenImporter(new File(StudyHelper.getPipelinePath()), StudyHelper.SPECIMEN_ARCHIVE_B, ARCHIVE_TEMP_DIR, getFolderName(), 4);
+        SpecimenImporter importer = new SpecimenImporter(StudyHelper.SPECIMEN_ARCHIVE_B, getFolderName(), 4);
         importer.importAndWaitForComplete();
 
         // verify that comments remain after second specimen load
