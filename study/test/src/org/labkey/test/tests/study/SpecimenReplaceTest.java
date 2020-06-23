@@ -48,7 +48,7 @@ public class SpecimenReplaceTest extends SpecimenMergeTest
 
     private void verifyReplaceWithNewData()
     {
-        SpecimenImporter importer = new SpecimenImporter(new File(_studyDataRoot), new File[] {LAB15_SPECIMENS}, SPECIMEN_TEMP_DIR, FOLDER_NAME, ++pipelineJobCount);
+        SpecimenImporter importer = new SpecimenImporter(_studyDataRoot, new File[] {LAB15_SPECIMENS}, SPECIMEN_TEMP_DIR, FOLDER_NAME, ++pipelineJobCount);
         importer.setExpectError(true);
         importer.importAndWaitForComplete();
         //go to individual vial list
@@ -62,7 +62,7 @@ public class SpecimenReplaceTest extends SpecimenMergeTest
 
     private void verifyReplaceWithSlightlyModifiedData()
     {
-        SpecimenImporter importer = new SpecimenImporter(new File(_studyDataRoot), new File[] {LAB_EDITED_SPECIMENS}, SPECIMEN_TEMP_DIR, FOLDER_NAME, ++pipelineJobCount);
+        SpecimenImporter importer = new SpecimenImporter(_studyDataRoot, new File[] {LAB_EDITED_SPECIMENS}, SPECIMEN_TEMP_DIR, FOLDER_NAME, ++pipelineJobCount);
         importer.setExpectError(true);
         importer.importAndWaitForComplete();
         //go to individual vial list
