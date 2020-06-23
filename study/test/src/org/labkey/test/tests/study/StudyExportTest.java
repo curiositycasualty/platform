@@ -620,6 +620,6 @@ public class StudyExportTest extends StudyManualTest
     {
         super.doCleanup(afterTest);
 
-        TestFileUtils.deleteDir(new File(StudyHelper.getPipelinePath() + "export"));
+        TestFileUtils.deleteDir(new File(StudyHelper.getPipelinePath(), "export"));
     }
 }

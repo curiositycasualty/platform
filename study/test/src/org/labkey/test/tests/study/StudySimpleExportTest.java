@@ -162,7 +162,7 @@ public class StudySimpleExportTest extends StudyBaseTest
     protected void doCleanup(boolean afterTest) throws TestTimeoutException
     {
         super.doCleanup(afterTest);
-        TestFileUtils.deleteDir(new File(StudyHelper.getPipelinePath() + "export"));
+        TestFileUtils.deleteDir(new File(StudyHelper.getPipelinePath(), "export"));
     }
 
     @Test

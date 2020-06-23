@@ -43,7 +43,6 @@ public class SpecimenMergeTest extends BaseWebDriverTest
     protected static final File LAB20_SPECIMENS = TestFileUtils.getSampleData("study/specimens/lab20.specimens");
     protected static final File LAB21_SPECIMENS = TestFileUtils.getSampleData("study/specimens/lab21.specimens");
 
-    protected static final File SPECIMEN_TEMP_DIR = StudyHelper.getStudyTempDir();
     protected int pipelineJobCount = 3;
 
     protected File _studyDataRoot = null;
