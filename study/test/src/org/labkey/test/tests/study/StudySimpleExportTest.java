@@ -69,6 +69,8 @@ public class StudySimpleExportTest extends StudyBaseTest
     private final String FOLDER_SCOPE = "folder";
     private final String PROJECT_SCOPE = "project";
 
+    private final File _sharedPipeline = new File(TestFileUtils.getTestTempDir(), "simpleExport");
+
     @Override
     protected BrowserType bestBrowser()
     {
@@ -94,6 +96,12 @@ public class StudySimpleExportTest extends StudyBaseTest
     public static void doSetup()
     {
         StudySimpleExportTest initTest = (StudySimpleExportTest)getCurrentTest();
+
+        TestFileUtils.deleteDir(initTest._sharedPipeline);
+        if (!initTest._sharedPipeline.mkdirs())
+        {
+            throw new RuntimeException("Failed to create pipeline dir: " + initTest._sharedPipeline.getAbsolutePath());
+        }
 
         initTest.initializeFolder();
 
@@ -125,6 +133,7 @@ public class StudySimpleExportTest extends StudyBaseTest
         clickButton("Create Study");
         // use all of the default study settings
         clickButton("Create Study");
+        setPipelineRoot(_sharedPipeline.getAbsolutePath());
         clickFolder(getFolderName());
     }
 
@@ -1001,7 +1010,7 @@ public class StudySimpleExportTest extends StudyBaseTest
     {
         _containerHelper.createSubfolder(getProjectName(), getProjectName(), subfolderName, "Collaboration", null, true);
         clickFolder(subfolderName);
-        setPipelineRoot(StudyHelper.getPipelinePath());
+        setPipelineRoot(_sharedPipeline.getAbsolutePath());
         importFolderFromPipeline("/export/folder.xml");
     }
 
