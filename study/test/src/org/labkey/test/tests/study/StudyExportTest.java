@@ -619,7 +619,5 @@ public class StudyExportTest extends StudyManualTest
     protected void doCleanup(boolean afterTest) throws TestTimeoutException
     {
         super.doCleanup(afterTest);
-
-        TestFileUtils.deleteDir(new File(StudyHelper.getPipelinePath(), "export"));
     }
 }

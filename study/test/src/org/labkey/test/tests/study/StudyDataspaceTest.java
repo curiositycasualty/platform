@@ -35,6 +35,7 @@ import org.labkey.test.util.PortalHelper;
 import org.labkey.test.util.StudyHelper;
 import org.openqa.selenium.WebElement;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +53,7 @@ public class StudyDataspaceTest extends StudyBaseTest
     protected final String SUBFOLDER_STUDY5 = "SubFolder 5";
     protected final String VISIT_TAG_QWP_TITLE = "VisitTag";
     private final PortalHelper _portalHelper = new PortalHelper(this);
+    private final File _sharedPipeline = new File(TestFileUtils.getTestTempDir(), "dataspace");
 
     @Override
     protected BrowserType bestBrowser()
@@ -88,7 +90,12 @@ public class StudyDataspaceTest extends StudyBaseTest
     protected void doCreateSteps()
     {
         initializeFolder();
-        setPipelineRoot(StudyHelper.getPipelinePath());
+        TestFileUtils.deleteDir(_sharedPipeline);
+        if (!_sharedPipeline.mkdirs())
+        {
+            throw new RuntimeException("Failed to create pipeline dir: " + _sharedPipeline.getAbsolutePath());
+        }
+        setPipelineRoot(_sharedPipeline.getAbsolutePath());
     }
 
     @Override
@@ -198,7 +205,7 @@ public class StudyDataspaceTest extends StudyBaseTest
         _fileBrowserHelper.selectFileBrowserItem("export/study/study.xml");
         _containerHelper.createSubfolder(getProjectName(), getProjectName(), SUBFOLDER_STUDY5, "Collaboration", null, true);
         clickFolder(SUBFOLDER_STUDY5);
-        setPipelineRoot(StudyHelper.getPipelinePath());
+        setPipelineRoot(_sharedPipeline.getAbsolutePath());
         importFolderFromPipeline("/export/folder.xml", 1, false);
         clickFolder(SUBFOLDER_STUDY5);
         assertTextPresent("tracks data in", "over 6 time points", "Data is present for 3 Participants");

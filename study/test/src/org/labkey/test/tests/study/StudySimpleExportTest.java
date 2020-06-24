@@ -96,7 +96,6 @@ public class StudySimpleExportTest extends StudyBaseTest
         StudySimpleExportTest initTest = (StudySimpleExportTest)getCurrentTest();
 
         initTest.initializeFolder();
-        initTest.setPipelineRoot(StudyHelper.getPipelinePath());
 
         initTest.clickFolder(initTest.getFolderName()); // navigate to StudyVerifyProject/Manually Created Study
         // click button to create manual study
@@ -162,7 +161,6 @@ public class StudySimpleExportTest extends StudyBaseTest
     protected void doCleanup(boolean afterTest) throws TestTimeoutException
     {
         super.doCleanup(afterTest);
-        TestFileUtils.deleteDir(new File(StudyHelper.getPipelinePath(), "export"));
     }
 
     @Test

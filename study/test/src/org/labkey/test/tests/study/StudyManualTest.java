@@ -29,8 +29,8 @@ import java.io.File;
 
 public abstract class StudyManualTest extends StudyTest
 {
-    private final File CRF_SCHEMAS = TestFileUtils.getSampleData("study/datasets/schema.tsv");
-    protected final File VISIT_MAP = TestFileUtils.getSampleData("study/v068_visit_map.xml");
+    private final File CRF_SCHEMAS = TestFileUtils.getSampleData("study/manual/schema.tsv");
+    protected final File VISIT_MAP = TestFileUtils.getSampleData("study/manual/v068_visit_map.xml");
     protected final StudyHelper _studyHelper = new StudyHelper(this);
 
     @Override
@@ -101,8 +101,8 @@ public abstract class StudyManualTest extends StudyTest
         clickButton("Save");
 
         // upload datasets:
-        File datasetFile = TestFileUtils.getSampleData("study/datasets/Study001.dataset");
-        new WebDavUploadHelper(getCurrentContainerPath()).uploadFile(datasetFile);
+        File datasetFile = TestFileUtils.getSampleData("study/Study001/datasets/Study001.dataset");
+        new WebDavUploadHelper(getCurrentContainerPath()).uploadDirectoryContents(datasetFile.getParentFile());
         goToDataPipeline().clickProcessData();
         _fileBrowserHelper.selectFileBrowserItem(datasetFile.getName());
         _fileBrowserHelper.selectImportDataAction("Import Datasets");

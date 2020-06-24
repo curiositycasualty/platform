@@ -74,7 +74,6 @@ public class AncillaryStudyTest extends StudyBaseTest
     public void doCleanup(boolean afterTest) throws TestTimeoutException
     {
         _containerHelper.deleteProject(getProjectName(), afterTest);
-        TestFileUtils.deleteDir(new File(StudyHelper.getPipelinePath(), "export"));
     }
 
     @Override

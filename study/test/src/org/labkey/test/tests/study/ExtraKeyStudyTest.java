@@ -89,7 +89,7 @@ public class ExtraKeyStudyTest extends StudyBaseTest
     protected void doCreateSteps()
     {
         initializeFolder();
-        initializePipeline(studyFolder.getAbsolutePath());
+        initializePipeline(studyFolder);
 
         importFolderFromPipeline("folder.xml");
     }

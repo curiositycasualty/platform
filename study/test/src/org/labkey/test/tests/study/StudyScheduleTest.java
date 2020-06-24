@@ -291,7 +291,7 @@ public class StudyScheduleTest extends StudyBaseTest
                 click(Ext4Helper.Locators.ext4Radio("Define dataset manually or from a file"));
                 clickButton("Next");
 
-                File file = TestFileUtils.getSampleData("study/datasets/plate002.tsv");
+                File file = TestFileUtils.getSampleData("study/Study001/datasets/plate002.tsv");
                 datasetDesignerPage = new DatasetDesignerPage(getDriver());
                 datasetDesignerPage.getFieldsPanel()
                         .setInferFieldFile(file);
@@ -377,7 +377,7 @@ public class StudyScheduleTest extends StudyBaseTest
                 click(Ext4Helper.Locators.ext4Radio("Define dataset manually or from a file"));
                 clickButton("Next");
 
-                File file = TestFileUtils.getSampleData("study/datasets/plate002.tsv");
+                File file = TestFileUtils.getSampleData("study/Study001/datasets/plate002.tsv");
                 datasetDesignerPage = new DatasetDesignerPage(getDriver());
                 datasetDesignerPage.getFieldsPanel()
                         .setInferFieldFile(file);
