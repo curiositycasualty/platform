@@ -241,7 +241,7 @@ public class MiniProfiler
     /** @return true if an admin has opted-in to collecting stack traces to troubleshoot memory leaks, unclosed result sets, or similar problems */
     public static boolean isCollectTroubleshootingStackTraces()
     {
-        return _collectTroubleshootingStackTraces;
+        return true;
     }
 
     /**
