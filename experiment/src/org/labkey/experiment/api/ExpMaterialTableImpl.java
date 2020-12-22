@@ -797,13 +797,19 @@ public class ExpMaterialTableImpl extends ExpRunItemTableImpl<ExpMaterialTable.C
     @Override
     public CaseInsensitiveHashMap<String> remapSchemaColumns()
     {
+        CaseInsensitiveHashMap<String> m = new CaseInsensitiveHashMap<>();
+
         if (null != getRealTable().getColumn("container") && null != getColumn("folder"))
         {
-            CaseInsensitiveHashMap<String> m = new CaseInsensitiveHashMap<>();
             m.put("container", "folder");
-            return m;
         }
-        return null;
+
+        for (ColumnInfo col : getColumns())
+        {
+            if (null != col.getMvColumnName())
+                m.put(col.getName() + "_" + MvColumn.MV_INDICATOR_SUFFIX, col.getMvColumnName().getName());
+        }
+        return m;
     }
 
     @Override
